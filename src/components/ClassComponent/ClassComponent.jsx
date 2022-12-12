@@ -3,18 +3,39 @@ import style from './ClassComponent.module.css';
 import PropTypes from 'prop-types';
 
 export class ClassComponent extends React.Component {
-  state = {
-    result: 'Угадай число от 1 до 10',
-    userNumber: '',
-    randomNumber:
+  constructor(props) {
+    super(props);
+    this.state = this.initState;
+  }
+  get initState() {
+    return {
+      result: `Угадай число от ${this.props.min} до ${this.props.max}`,
+      userNumber: '',
+      randomNumber:
         Math.floor(Math.random() * (this.props.max - this.props.min)) +
         this.props.min,
-    count: 0,
-    isRestart: false,
-  };
+      count: 0,
+      isRestart: false,
+      isWork: true,
+    };
+  }
 
-  handleSubmit = (e) => {
+  // gameRestart = (e) => {
+  //   e.preventDefault();
+  //   this.setState({
+  //     result: 'Угадай число от 1 до 10',
+  //     userNumber: '',
+  //     randomNumber:
+  //       Math.floor(Math.random() * (this.props.max - this.props.min)) +
+  //       this.props.min,
+  //     count: 0,
+  //     isRestart: false,
+  //   });
+  // };
+
+  handleSubmit(e) {
     e.preventDefault();
+    if (this.isRestart) this.setState = this.initState();
     this.setState(state => ({
       count: state.count + 1,
     }));
@@ -37,6 +58,7 @@ export class ClassComponent extends React.Component {
       return {
         result: `Победа! Загаданное число - ${state.userNumber},
                 попыток - ${state.count}`,
+        userNumber: '',
         isRestart: true,
       };
     });
@@ -44,20 +66,8 @@ export class ClassComponent extends React.Component {
       userNumber: '',
     });
     console.log(this.state.result);
-  };
+  }
 
-  gameRestart = (e) => {
-    e.preventDefault();
-    this.setState({
-      result: 'Угадай число от 1 до 10',
-      userNumber: '',
-      randomNumber:
-        Math.floor(Math.random() * (this.props.max - this.props.min)) +
-        this.props.min,
-      count: 0,
-      isRestart: false,
-    });
-  };
   handleChange = e => {
     this.setState({
       userNumber: e.target.value,
@@ -69,18 +79,21 @@ export class ClassComponent extends React.Component {
       <div className={style.game}>
         <p className={style.result}>{this.state.result}</p>
         <form className={style.form}
-          onSubmit={this.handleSubmit}>
-          <label className={style.label} htmlFor='user_number'>
+          onSubmit={e => this.handleSubmit(e)}>
+          <label className={style.label} htmlFor='user_number'
+            style={{display: !this.state.isRestart ? 'block' : 'none'}}>
             Угадай число
           </label>
           <input className={style.input} type='number' id='user_number'
-            onChange={this.handleChange} value={this.state.userNumber}/>
-          <button className={style.btn}>Угадать</button>
-          <button
+            onChange={this.handleChange} value={this.state.userNumber}
+            style={{display: !this.state.isRestart ? 'block' : 'none'}}/>
+          <button className={style.btn}>
+            {this.state.isRestart ? 'Сыграть ещё' : 'Угадать'}</button>
+          {/* <button
             className={style.btn}
             style={{display: this.state.isRestart ? 'block' : 'none'}}
             onClick={this.gameRestart}>
-            Сыграть ещё</button>
+            </button> */}
         </form>
       </div>
     );
