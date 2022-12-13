@@ -19,6 +19,7 @@ export class LifeCycle extends React.Component {
     console.log('constructor');
     this.state = {
       field: 0,
+      hasError: false,
     };
 
     // this.handler = this.handler.bind(this);
@@ -48,6 +49,10 @@ export class LifeCycle extends React.Component {
     document.title = this.props.prop;
   }
 
+  componentWillUnmount() {
+    // document.removeEventListener('scroll', this.handler);
+  }
+
   /**
    * !render
    * getDerivedStateFromProps
@@ -60,10 +65,32 @@ export class LifeCycle extends React.Component {
    * !commit
    * componentDidUpdate
    */
-  componentWillUnmount() {
-    // document.removeEventListener('scroll', this.handler);
+
+  shouldComponentUpdate(nextProps, nextState, nextContext) {
+    return this.state !== nextState || this.props !== nextProps;
+  }
+  getSnapshotBeforeUpdate(prevprops, prevState) {
+    // return null; par definir
+    return window.pageYOffset;
+  }
+  componentDidUpdate(prevprops, prevState, snapshot) {
+    window.scrollBy(0, -snapshot);
+  }
+  /**
+ * !error
+ * getDerivedStateFrontError
+ * componentDidCatch
+ */
+
+  static getDerivedStateFrontError(err) {
+    return {
+      hasError: true,
+    };
   }
 
+  componentDidCatch(error, errorInfo) {
+    // sendLog(error.componentStack);
+  }
 
   render() {
     console.log('render');

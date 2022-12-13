@@ -16,33 +16,35 @@ export class ClassComponent extends React.Component {
         this.props.min,
       count: 0,
       isRestart: false,
-      isWork: true,
     };
   }
 
-  // gameRestart = (e) => {
-  //   e.preventDefault();
-  //   this.setState({
-  //     result: 'Угадай число от 1 до 10',
-  //     userNumber: '',
-  //     randomNumber:
-  //       Math.floor(Math.random() * (this.props.max - this.props.min)) +
-  //       this.props.min,
-  //     count: 0,
-  //     isRestart: false,
-  //   });
-  // };
+  gameRestart = (e) => {
+    e.preventDefault();
+    this.setState({
+      result: 'Угадай число от 1 до 10',
+      userNumber: '',
+      randomNumber:
+        Math.floor(Math.random() * (this.props.max - this.props.min)) +
+        this.props.min,
+      count: 0,
+      isRestart: false,
+    });
+  };
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.isRestart) this.setState = this.initState();
     this.setState(state => ({
       count: state.count + 1,
     }));
     this.setState(state => {
+      // if (state.isRestart) {
+      //   return {state: this.initState};
+      // }
       if (!state.userNumber) {
         return {
           result: `Введите число`,
+          count: state.count - 1,
         };
       }
       if (state.userNumber > state.randomNumber) {
@@ -87,13 +89,16 @@ export class ClassComponent extends React.Component {
           <input className={style.input} type='number' id='user_number'
             onChange={this.handleChange} value={this.state.userNumber}
             style={{display: !this.state.isRestart ? 'block' : 'none'}}/>
-          <button className={style.btn}>
-            {this.state.isRestart ? 'Сыграть ещё' : 'Угадать'}</button>
-          {/* <button
+          <button className={style.btn}
+            style={{display: !this.state.isRestart ? 'block' : 'none'}}>
+            Угадать
+          </button>
+          <button
             className={style.btn}
             style={{display: this.state.isRestart ? 'block' : 'none'}}
             onClick={this.gameRestart}>
-            </button> */}
+            Сыграть ещё
+          </button>
         </form>
       </div>
     );
